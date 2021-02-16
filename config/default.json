@@ -1,0 +1,5 @@
+{
+    "port": 5000,
+    "mongoUrl": "mongodb+srv://kalina:kalina@cluster0.wg4vh.mongodb.net/kalina?retryWrites=true&w=majority",
+    "jwtSecret": "kalina"
+}
