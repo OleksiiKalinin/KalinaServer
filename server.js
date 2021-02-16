@@ -4,6 +4,7 @@ const Conversations = require('./convesationSchema.js');
 const path = require('path');
 const Pusher = require('pusher');
 const Cors = require('cors');
+const config = require('config');
 
 const app = express();
 const port = process.env.PORT || 5000;
