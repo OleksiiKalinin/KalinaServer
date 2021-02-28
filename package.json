@@ -1,5 +1,5 @@
 {
-  "name": "back",
+  "name": "socnetserver",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

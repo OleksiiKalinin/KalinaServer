@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const {Schema, model, Types} = require('mongoose');
 
-const Schema = mongoose.Schema({
+const schema = Schema({
     chatName: String,
     conversation: [
         {
@@ -9,11 +9,11 @@ const Schema = mongoose.Schema({
             user: {
                 displayName: String,
                 email: String,
-                photo: String,
+                // photo: String,
                 uid: String
             }
         }
     ]
 });
 
-module.exports = mongoose.model('conversations', Schema);
+module.exports = model('conversations', schema);

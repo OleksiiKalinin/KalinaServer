@@ -1,7 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Conversations = require('./convesationSchema.js');
-const path = require('path');
 const Pusher = require('pusher');
 const Cors = require('cors');
 const config = require('config');
@@ -39,25 +37,18 @@ const pusher = new Pusher({
   app.use(express.json({extended: true}));
   
   app.use(Cors());
-  
-  // app.use(function (req, res, next) {
-  //     res.setHeader('Access-Control-Allow-Origin', '*');
-  //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  //     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  //     res.setHeader('Access-Control-Allow-Credentials', true);
-  //     res.setHeader('content-type', 'application/json; charset=utf-8');
-  //     next();
-  //     });
-  
+
   app.use('/api/chats', require('./routes/chats.routes'));
   
   app.use('/api/auth', require('./routes/auth.routes'));
+
+  app.use('/api/posts', require('./routes/posts.routes'));
   
   app.get('/', (req, res) => {
       res.status(200).json('Hello world');
   });
   
-  (async function start() {
+  (async () => {
       try {
           await mongoose.connect(config.get('mongoUrl'), {
               useCreateIndex: true,

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const User = require('../models/User');
 
 module.exports = (req, res, next) => {
     if (req.method === 'OPTIONS') {
@@ -10,12 +11,20 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
 
         if (!token) {
-            res.status(401).json({message: 'No authorization'});
+            return res.status(401).json({message: 'No authorization'});
         } 
 
-        const decoded = jwt.verify(token, config.get('jwtSecret'));
-        req.user = decoded;
-        next();
+        jwt.verify(token, config.get('jwtSecret'), (error, payload) => {
+            if (error) {
+                return res.status(401).json({message: 'No authorization'});
+            }
+
+            User.findById(payload.user._id)
+            .then(userData => {
+                req.user = userData;
+                next();
+            })
+        });
     } catch (e) {
         res.status(401).json({message: 'No authorization'});
     }

@@ -1,9 +1,9 @@
 const {Router} = require('express');
 const router = Router();
-const Conversations = require('../convesationSchema.js')
+const Conversations = require('../models/Convesation.js');
 const auth = require('../middleware/auth.middleware');
 
-router.post('/new/conversation',  (req, res) => {
+router.post('/new/conversation', auth, (req, res) => {
     const dbData = req.body;
 
     Conversations.create(dbData, (err, data) => {
@@ -15,7 +15,7 @@ router.post('/new/conversation',  (req, res) => {
     });
 });
 
-router.post('/new/message',  (req, res) => {
+router.post('/new/message', auth, (req, res) => {
     Conversations.updateOne(
         { _id: req.query.id },
         { $push: {conversation: req.body} },
@@ -31,7 +31,7 @@ router.post('/new/message',  (req, res) => {
     );
 });
 
-router.get('/get/conversations',  (req, res) => {
+router.get('/get/conversations', auth, (req, res) => {
     Conversations.find((err, data) => {
         if (err) {
             res.status(500).json(err);
@@ -55,7 +55,7 @@ router.get('/get/conversations',  (req, res) => {
     });
 });
 
-router.get('/get/conversation',  (req, res) => {
+router.get('/get/conversation', auth, (req, res) => {
     const id = req.query.id;
 
     Conversations.find({ _id: id }, (err, data) => {
@@ -68,7 +68,7 @@ router.get('/get/conversation',  (req, res) => {
     });
 });
 
-router.get('/get/lastMessage', (req, res) => {
+router.get('/get/lastMessage', auth, (req, res) => {
     const id = req.query.id;
     
     Conversations.find({ _id: id }, (err, data) => {
