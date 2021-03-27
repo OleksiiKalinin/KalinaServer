@@ -54,7 +54,7 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(400).json({
                 errors: errors.array(),
-                message: 'Incorrect log in data'
+                message: 'Incorrect email or password'
             });
         }
         
@@ -62,7 +62,7 @@ router.post(
         const user = await User.findOne({email});
 
         if (!user) {
-            return res.status(400).json({message: 'User was`n found'});
+            return res.status(400).json({message: 'Incorrect email or password'});
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -73,9 +73,10 @@ router.post(
         
         const token = jwt.sign(
             {user: user},
-            config.get('jwtSecret'),
-            {expiresIn: '1h'}
+            config.get('jwtSecret')
         );
+
+        user.password = undefined;
 
         res.json({token, user});
     } catch (e) {

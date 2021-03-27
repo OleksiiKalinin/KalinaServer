@@ -15,50 +15,49 @@ const pusher = new Pusher({
     useTLS: true
   });
   
-  mongoose.connection.once('open', () => {
-      console.log('db connected');
-      const changeStream = mongoose.connection.collection('conversations').watch();
-  
-      changeStream.on('change', (change) => {
-          if (change.operationType === 'insert') {
-              pusher.trigger("chats", "newChat", {
-                  'change': change
-                });
-          } else if(change.operationType === 'update'){
-              pusher.trigger("messages", "newMessage", {
-                  'change': change
-              });   
-          } else {
-              console.log('error triggering Pusher');
-          }
-      });
-  });
-  
-  app.use(express.json({extended: true}));
-  
-  app.use(Cors());
+mongoose.connection.once('open', () => {
+    console.log('db connected');
+    const changeStream = mongoose.connection.collection('conversations').watch();
 
-  app.use('/api/chats', require('./routes/chats.routes'));
-  
-  app.use('/api/auth', require('./routes/auth.routes'));
+    changeStream.on('change', (change) => {
+        if (change.operationType === 'insert') {
+            pusher.trigger("chats", "newChat", {
+                'change': change
+            });
+        } else if(change.operationType === 'update'){
+            pusher.trigger("messages", "newMessage", {
+                'change': change
+            });   
+        } else {
+            console.log('error triggering Pusher');
+        }
+    });
+});
 
-  app.use('/api/posts', require('./routes/posts.routes'));
-  
-  app.get('/', (req, res) => {
-      res.status(200).json('Hello world');
-  });
-  
-  (async () => {
-      try {
-          await mongoose.connect(config.get('mongoUrl'), {
-              useCreateIndex: true,
-              useNewUrlParser: true,
-              useUnifiedTopology: true
-          });
-          app.listen(port, () => console.log('server started')); 
-      } catch {
-          console.log('Server error', e.message);
-          process.exit(1);
-      }
-  })();
+app.use(express.json({extended: true}));
+
+app.use(Cors());
+
+app.get('/', (req, res) => res.status(200).json('Hello world'));
+
+app.use('/api/chats', require('./routes/chats.routes'));
+
+app.use('/api/auth', require('./routes/auth.routes'));
+
+app.use('/api/posts', require('./routes/posts.routes'));
+
+
+(async () => {
+    try {
+        await mongoose.connect(config.get('mongoUrl'), {
+            useCreateIndex: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        app.listen(port, () => console.log('server started')); 
+    } catch {
+        console.log('Server error', e.message);
+        process.exit(1);
+    }
+})();
   

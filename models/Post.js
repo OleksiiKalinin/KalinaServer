@@ -9,14 +9,18 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    photo: {
+    picture: {
         type: String,
-        default: 'no photo'
+        required: true
     },
     owner: {
         type: Types.ObjectId,
         ref: 'User'
-    }
+    },
+    likes: [{
+        type: Types.ObjectId,
+        ref: 'User'
+    }]
 });
 
 module.exports = model('Post', schema);

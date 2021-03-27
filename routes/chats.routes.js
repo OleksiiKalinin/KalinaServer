@@ -21,10 +21,8 @@ router.post('/new/message', auth, (req, res) => {
         { $push: {conversation: req.body} },
         (err, data) => {
             if(err) {
-                console.log(err);
                 res.status(500).json(err);
             } else {
-                console.log(data);
                 res.status(201).json(data);
             }
         }
@@ -62,7 +60,6 @@ router.get('/get/conversation', auth, (req, res) => {
         if (err) {
             res.status(500).json(err);
         } else {
-            console.log(data)
             res.status(200).json(data);
         }
     });
@@ -80,7 +77,7 @@ router.get('/get/lastMessage', auth, (req, res) => {
             cData.sort((a, b) => {
                 return b.timestamp - a.timestamp;
             });
-            console.log(cData[0])
+            
             res.status(200).json(cData[0]);
         }
     });
