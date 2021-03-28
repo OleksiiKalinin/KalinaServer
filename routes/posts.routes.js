@@ -5,14 +5,14 @@ const auth = require('../middleware/auth.middleware');
 
 router.post('/new/post', auth, async (req, res) => {
     try {
-        const {title, body, picture} = req.body;
+        const {body, picture} = req.body;
         req.user.password = undefined;
 
-        if (!title || !body || !picture) {
+        if (!body || !picture) {
             return res.status(422).json({message: 'Please, enter all the fields'})
         }
         
-        const post = new Post({title, body, picture, owner: req.user});
+        const post = new Post({body, picture, owner: req.user});
 
         await post.save();
         
@@ -26,6 +26,7 @@ router.post('/new/post', auth, async (req, res) => {
 router.get('/get/posts', auth, (req, res) => {
     Post.find()
     .populate('owner', '_id displayName')
+    .populate('comments.owner', '_id displayName')
     .then(posts => {
         res.json({posts});
     })
@@ -65,6 +66,45 @@ router.put('/put/unlike', auth, (req, res) => {
             res.json(result);
         }
     });
+});
+
+router.put('/put/comment', auth, (req, res) => {
+    const comment = {
+        text: req.body.text,
+        owner: req.user._id
+    };
+
+    Post.findByIdAndUpdate(req.body.postId, {
+        $push:{comments: comment}
+    }, {new: true})
+    .populate('comments.owner', '_id displayName')
+    .exec((err, result) => {
+        if(err) {
+            return res.status(422).json({error: err});
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+router.delete('/delete/post:id', auth, (req, res) => {
+    Post.findOne({_id: req.params.id})
+    .populate('owner', '_id')
+    .exec((err, post) => {
+        if(err || !post) {
+            return res.status(422).json({error: err});
+        }
+
+        if(post.owner._id.toString() === req.user._id.toString()) {
+            post.remove()
+            .then(result => {
+                res.json({message: 'Successfully deleted'});
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    })
 });
 
 module.exports = router;

@@ -1,10 +1,6 @@
 const {Schema, model, Types} = require('mongoose');
 
 const schema = new Schema({
-    title: {
-        type: String,
-        required: true
-    },
     body: {
         type: String,
         required: true
@@ -20,6 +16,13 @@ const schema = new Schema({
     likes: [{
         type: Types.ObjectId,
         ref: 'User'
+    }],
+    comments: [{
+        text: String,
+        owner: {
+            type: Types.ObjectId,
+            ref: 'User'
+        }
     }]
 });
 
