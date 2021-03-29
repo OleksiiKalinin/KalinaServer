@@ -87,7 +87,7 @@ router.put('/put/comment', auth, (req, res) => {
     });
 });
 
-router.delete('/delete/post:id', auth, (req, res) => {
+router.delete('/delete/post/:id', auth, (req, res) => {
     Post.findOne({_id: req.params.id})
     .populate('owner', '_id')
     .exec((err, post) => {

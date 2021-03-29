@@ -14,7 +14,11 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    links: [{
+    followers: [{
+        type: Types.ObjectId,
+        ref: 'Link'
+    }],
+    following: [{
         type: Types.ObjectId,
         ref: 'Link'
     }]
