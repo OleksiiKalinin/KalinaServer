@@ -14,6 +14,10 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    profileImg: {
+        type: String,
+        default: ''
+    },
     followers: [{
         type: Types.ObjectId,
         ref: 'Link'

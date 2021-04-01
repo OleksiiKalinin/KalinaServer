@@ -19,11 +19,12 @@ const schema = new Schema({
     }],
     comments: [{
         text: String,
+        timestamp: String,
         owner: {
             type: Types.ObjectId,
             ref: 'User'
         }
     }]
-});
+}, {timestamps: true});
 
 module.exports = model('Post', schema);

@@ -25,8 +25,21 @@ router.post('/new/post', auth, async (req, res) => {
 
 router.get('/get/posts', auth, (req, res) => {
     Post.find()
-    .populate('owner', '_id displayName')
-    .populate('comments.owner', '_id displayName')
+    .populate('owner', '_id displayName profileImg')
+    .populate('comments.owner', '_id displayName profileImg')
+    .sort('-createdAt')
+    .then(posts => {
+        console.log(posts);
+        res.json({posts});
+    })
+    .catch(err => console.log(err));
+});
+
+router.get('/get/followingPosts', auth, (req, res) => {
+    Post.find({owner: {$in: req.user.following}})
+    .populate('owner', '_id displayName profileImg')
+    .populate('comments.owner', '_id displayName profileImg')
+    .sort('-createdAt')
     .then(posts => {
         res.json({posts});
     })
@@ -36,6 +49,7 @@ router.get('/get/posts', auth, (req, res) => {
 router.get('/get/myposts', auth, (req, res) => {
     Post.find({owner: req.user._id})
     .populate('owner', '_id displayName')
+    .sort('-createdAt')
     .then(posts => {
         res.json({posts});
     })
@@ -71,7 +85,8 @@ router.put('/put/unlike', auth, (req, res) => {
 router.put('/put/comment', auth, (req, res) => {
     const comment = {
         text: req.body.text,
-        owner: req.user._id
+        owner: req.user._id,
+        timestamp: Date.now()
     };
 
     Post.findByIdAndUpdate(req.body.postId, {
