@@ -16,7 +16,7 @@ const schema = new Schema({
     },
     profileImg: {
         type: String,
-        default: ''
+        default: 'https://res.cloudinary.com/kalina-why-not/image/upload/v1617533877/bthe3vt3icrxrfhoh4ob.png'
     },
     followers: [{
         type: Types.ObjectId,

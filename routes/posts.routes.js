@@ -29,7 +29,6 @@ router.get('/get/posts', auth, (req, res) => {
     .populate('comments.owner', '_id displayName profileImg')
     .sort('-createdAt')
     .then(posts => {
-        console.log(posts);
         res.json({posts});
     })
     .catch(err => console.log(err));
@@ -48,7 +47,8 @@ router.get('/get/followingPosts', auth, (req, res) => {
 
 router.get('/get/myposts', auth, (req, res) => {
     Post.find({owner: req.user._id})
-    .populate('owner', '_id displayName')
+    .populate('owner', '_id displayName profileImg')
+    .populate('comments.owner', '_id displayName profileImg')
     .sort('-createdAt')
     .then(posts => {
         res.json({posts});

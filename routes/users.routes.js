@@ -76,7 +76,7 @@ router.put('/put/unfollow', auth, (req, res) => {
 
 router.get('/get/myfollowdata', auth, (req, res) => {
     User.findOne({_id: req.user._id})
-    .select('-password')
+    .select('followers following')
     .then(user => {
         res.json({followers: user.followers, following: user.following});
     })
