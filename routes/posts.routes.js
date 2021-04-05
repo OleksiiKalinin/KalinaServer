@@ -16,8 +16,7 @@ router.post('/new/post', auth, async (req, res) => {
 
         await post.save();
         
-
-        res.status(201).json({post});
+        res.status(201).json(post);
     } catch (e) {
         res.status(500).json({message: 'Something goes wrong, try again'});
     }

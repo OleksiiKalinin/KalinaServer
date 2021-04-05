@@ -9,7 +9,7 @@ router.get('/get/user/:id', auth, (req, res) => {
     .select('-password')
     .then(user => {
         Post.find({owner: req.params.id})
-        .populate('owner', '_id displayName')
+        .populate('owner', '_id displayName profileImg')
         .exec((err, posts) => {
             if (err) {
                 return res.status(422).json({error: err});
