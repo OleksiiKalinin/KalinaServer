@@ -8,7 +8,7 @@ router.post('/new/post', auth, async (req, res) => {
         const {body, picture} = req.body;
         req.user.password = undefined;
 
-        if (!body || !picture) {
+        if (!picture) {
             return res.status(422).json({message: 'Please, enter all the fields'})
         }
         

@@ -20,11 +20,11 @@ const schema = new Schema({
     },
     followers: [{
         type: Types.ObjectId,
-        ref: 'Link'
+        ref: 'User'
     }],
     following: [{
         type: Types.ObjectId,
-        ref: 'Link'
+        ref: 'User'
     }]
 })
 

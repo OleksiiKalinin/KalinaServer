@@ -10,6 +10,7 @@ router.post(
     '/register',
     [
         check('email', 'Incorrect email').isEmail(),
+        check('displayName', 'Incorrect nickname').isLength({min: 4}),
         check('password', 'Incorrect password, minimal length is 6 symbols').isLength({min: 6})
     ],      
     async (req, res) => {

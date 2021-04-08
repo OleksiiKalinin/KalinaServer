@@ -23,14 +23,19 @@ router.get('/get/user/:id', auth, (req, res) => {
 });
 
 router.get('/get/users', auth, (req, res) => {
-    let allId = [];
     User.find()
+    .select('_id displayName profileImg')
     .then(users => {
-        users.map(user => allId.push(user._id))
-        res.json(allId);
+        for (let i = users.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let x = users[i];
+            users[i] = users[j];
+            users[j] = x;
+        }
+        res.json(users);
     })
     .catch(err => {
-        return res.status(404).json({error: 'User not found'});
+        return res.status(404).json({error: 'Users not found'});
     });
 });
 
@@ -97,7 +102,7 @@ router.put('/put/profileImg', auth, (req, res) => {
 });
 
 router.post('/post/users-search', auth, (req, res) => {
-    let userPattern = new RegExp("^" + req.body.query);
+    let userPattern = new RegExp(req.body.query, 'i');
     User.find({displayName: {$regex: userPattern}})
     .select("_id profileImg displayName")
     .then(user => {

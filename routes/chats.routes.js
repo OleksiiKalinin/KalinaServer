@@ -77,8 +77,27 @@ router.get('/get/conversations', auth, (req, res) => {
 router.get('/get/conversation', auth, (req, res) => {
     Conversations.findOne({ _id: req.query.id })
     .populate('conversation.owner', '_id displayName profileImg')
-    .then(chats => {
-        res.json(chats);
+    .then(async chat => {
+        let conversationInfo = {
+            id: chat._id,
+            name: chat.chatName,
+            chatImg: chat.chatImg,
+            timestamp: chat.conversation[0].timestamp,
+            conversation: chat.conversation,
+            extra: []
+        };
+
+        for(let j = 0; j < chat.participants.length; ++j) {
+            const user = await User.findOne({_id: chat.participants[j]});
+
+            conversationInfo.extra.push({
+                id: user._id,
+                displayName: user.displayName,
+                profileImg: user.profileImg
+            });
+        }
+
+        res.json(conversationInfo);
     })
     .catch(err => console.log(err));
 });
