@@ -1,4 +1,4 @@
-Developing started in January 2021
+Developing started in January 2021 (not finished yet)
 
 Server for Soc.Net. "Kalina"
 
