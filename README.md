@@ -5,4 +5,4 @@ Server for Soc.Net. "Kalina"
 Based on ExpressJS, MongoDB, NodeJS.
 Also PusherJS to make this network realtime.
 
-Link: https://kalinaserver.herokuapp.com/
+Link: not available
